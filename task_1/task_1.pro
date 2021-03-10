@@ -7,7 +7,9 @@ DESTDIR = $$PWD/../build
 
 SOURCES += \
         filewatchermanager.cpp \
+        fileinfowatcher.cpp \
         main.cpp
 
 HEADERS += \
-    filewatchermanager.h
+    filewatchermanager.h \
+    fileinfowatcher.h
