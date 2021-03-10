@@ -26,7 +26,10 @@ public:
 
     void setWatchedFile(const QString &path);
 
-    QString fileInfoToString() const;
+    QString getInfoToString() const;
+
+signals:
+    void fileChanged();
 
 public slots:
     void fileInfoUpdated(const QFileInfo& newInfo);
