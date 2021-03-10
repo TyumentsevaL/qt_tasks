@@ -6,4 +6,8 @@ CONFIG -= app_bundle
 DESTDIR = $$PWD/../build
 
 SOURCES += \
+        filewatchermanager.cpp \
         main.cpp
+
+HEADERS += \
+    filewatchermanager.h
