@@ -2,6 +2,8 @@
 
 #include <QTimer>
 #include <QFile>
+#include <QDateTime>
+#include <QDebug>
 
 namespace  {
 const int DEFAULT_RECHECKPERIOD = 200; // make a param?
@@ -18,13 +20,13 @@ FileWatcherManager::FileWatcherManager()
     connect(m_checkTimer, &QTimer::timeout, [this]{
         for(const QString& filePath : m_watchedFilesData.keys()) {
             QFileInfo newInfo(filePath);
-            if (newInfo != m_watchedFilesData[filePath]) {
-                if (newInfo.exists()) {
+            if (newInfo.exists()) {
+                if (newInfo.lastModified() != m_watchedFilesData[filePath].lastModified()) {
                     m_watchedFilesData[filePath] = newInfo;
-                } else {
-                    m_watchedFilesData.remove(filePath);
+                    emit fileChanged(newInfo);
                 }
-
+            } else {
+                m_watchedFilesData.remove(filePath);
                 emit fileChanged(newInfo);
             }
         }
@@ -43,6 +45,7 @@ bool FileWatcherManager::addPath(const QString &path)
     }
 
     m_watchedFilesData.insert(path, info);
+    emit fileChanged(info);
     return true;
 }
 
