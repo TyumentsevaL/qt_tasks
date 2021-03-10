@@ -3,7 +3,6 @@
 #include <QTimer>
 #include <QFile>
 #include <QDateTime>
-#include <QDebug>
 
 namespace  {
 const int DEFAULT_RECHECKPERIOD = 200; // make a param?
@@ -45,7 +44,7 @@ bool FileWatcherManager::addPath(const QString &path)
     }
 
     m_watchedFilesData.insert(path, info);
-    emit fileChanged(info);
+//    emit fileChanged(info); // uncomment to send initial info
     return true;
 }
 
