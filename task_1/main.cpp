@@ -1,4 +1,9 @@
-#include <QCoreApplication>
+#ifdef GUI_VERSION
+    #include <QApplication>
+#else
+    #include <QCoreApplication>
+#endif
+
 #include <QSharedPointer>
 #include <QDir>
 #include <QDebug>
@@ -6,6 +11,7 @@
 #include "filewatchermanager.h"
 #include "fileinfowatcher.h"
 
+#ifndef GUI_VERSION
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -37,3 +43,15 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+#else // --------------------------------------------------------------
+
+#include "filewatcherwidget.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    FileWatcherWidget w;
+    w.show();
+    return app.exec();
+}
+#endif
