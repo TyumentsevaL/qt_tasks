@@ -74,6 +74,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -89,7 +96,11 @@
         </layout>
        </item>
        <item>
-        <widget class="QListWidget" name="filesListWidget"/>
+        <widget class="QListWidget" name="filesListWidget">
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectColumns</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
