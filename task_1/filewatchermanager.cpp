@@ -44,7 +44,9 @@ bool FileWatcherManager::addPath(const QString &path)
     }
 
     m_watchedFilesData.insert(path, info);
-//    emit fileChanged(info); // uncomment to send initial info
+    if (m_sendsInitInfo) {
+        emit fileChanged(info);
+    }
     return true;
 }
 
@@ -78,4 +80,9 @@ QStringList FileWatcherManager::removePaths(const QStringList &paths)
         }
     }
     return result;
+}
+
+void FileWatcherManager::setSendsInitInfo(bool sendsInit)
+{
+    m_sendsInitInfo = sendsInit;
 }

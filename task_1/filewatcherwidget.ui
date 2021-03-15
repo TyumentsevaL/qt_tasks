@@ -74,9 +74,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="refreshPushButton">
            <property name="text">
-            <string>PushButton</string>
+            <string>Обновить</string>
            </property>
           </widget>
          </item>
@@ -98,7 +98,7 @@
        <item>
         <widget class="QListWidget" name="filesListWidget">
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectColumns</enum>
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
         </widget>
        </item>

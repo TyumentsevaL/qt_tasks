@@ -14,6 +14,8 @@ FileWatcherWidget::FileWatcherWidget(QWidget *parent)
 
     // ------- config UI -------
 
+    FileWatcherManager::Instance().setSendsInitInfo(true);
+
     connect(ui->choosePushButton, &QAbstractButton::clicked, [this]{
         const QString path = QFileDialog::getOpenFileName(this, "Выберите файл для наблюдения", QDir::currentPath(), "Any file (*.*)");
         watchers[path] = new FileInfoWatcher(path, this);
@@ -39,6 +41,13 @@ FileWatcherWidget::FileWatcherWidget(QWidget *parent)
         const QString path = current.data().toString();
         if (watchers.contains(path)) {
             ui->infoTextEdit->setText(watchers[path]->getInfoToString());
+        }
+    });
+
+    connect(ui->refreshPushButton, &QAbstractButton::clicked, [this]{
+        const QModelIndex currentIndex = ui->filesListWidget->currentIndex();
+        if (currentIndex.isValid()) {
+            ui->infoTextEdit->setText(watchers[currentIndex.data().toString()]->getInfoToString());
         }
     });
 }
