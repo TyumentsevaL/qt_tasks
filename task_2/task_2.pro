@@ -6,4 +6,12 @@ CONFIG -= app_bundle
 DESTDIR = $$PWD/../build
 
 SOURCES += \
-        main.cpp
+        classunit.cpp \
+        main.cpp \
+        methodunit.cpp \
+        unit.cpp
+
+HEADERS += \
+    classunit.h \
+    methodunit.h \
+    unit.h
