@@ -1,9 +1,14 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include <string>
 #include <memory>
+#include <string>
 
+namespace core {
+/*!
+ * \brief The Unit class это у нас типа abstract base для сущностей,
+ * чтобы было дерево вложенности
+ */
 class Unit {
 public:
     using Flags = unsigned int;
@@ -13,21 +18,15 @@ public:
     virtual void add(const std::shared_ptr<Unit>&, Flags);
 
     virtual std::string compile(unsigned int level = 0) const = 0;
-
-protected:
-    virtual std::string generateShift(unsigned int level) const;
 };
 
-// -------------------------------------------------- *** --------------------------------------------------
+/*!
+ * \brief generateShift -- форматирование, это НЕ часть единицы абстрации, потому свободная функция
+ * \param level         -- уровень вложенности
+ * \return              -- отступ
+ */
+std::string generateShift(unsigned int level);
 
-class PrintOperatorUnit : public Unit {
-public:
-    explicit PrintOperatorUnit(const std::string& text);
-
-    std::string compile( unsigned int level = 0 ) const;
-
-private:
-    std::string m_text;
-};
+} // namespace core
 
 #endif // UNIT_H

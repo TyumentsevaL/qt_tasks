@@ -1,5 +1,7 @@
 #include "methodunit.h"
 
+#include <sstream>
+
 MethodUnit::MethodUnit(const std::string& name, const std::string& returnType, Flags flags)
     : m_name(name)
     , m_returnType(returnType)
@@ -13,21 +15,28 @@ void MethodUnit::add(const std::shared_ptr<Unit> &unit, Unit::Flags)
 
 std::string MethodUnit::compile(unsigned int level) const
 {
-    std::string result = generateShift(level);
+    std::stringstream result;
+    result << core::generateShift(level);
+
     if( m_flags & STATIC ) {
-        result += "static ";
+        result << "static ";
     } else if( m_flags & VIRTUAL ) {
-        result += "virtual ";
+        result << "virtual ";
     }
-    result += m_returnType + " ";
-    result += m_name + "()";
+
+    result << m_returnType
+           << " "
+           << m_name
+           << "()";
     if( m_flags & CONST ) {
-        result += " const";
+        result << " const";
     }
-    result += " {\n";
-    for( const auto& b : m_body ) {
-        result += b->compile( level + 1 );
+
+    result << " {\n";
+    for(const auto& b : m_body) {
+        result << b->compile(level + 1);
     }
-    result += generateShift( level ) + "}\n";
-    return result;
+    result << core::generateShift(level) + "}\n";
+
+    return result.str();
 }

@@ -9,9 +9,12 @@ SOURCES += \
         classunit.cpp \
         main.cpp \
         methodunit.cpp \
+        printoperatorunit.cpp \
         unit.cpp
 
 HEADERS += \
     classunit.h \
     methodunit.h \
-    unit.h
+    printoperatorunit.h \
+    unit.h \
+    unitfactory.h

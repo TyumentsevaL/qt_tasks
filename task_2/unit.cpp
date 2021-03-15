@@ -1,29 +1,13 @@
 #include "unit.h"
-
 #include <stdexcept>
 
-void Unit::add(const std::shared_ptr<Unit> &, Unit::Flags)
+void core::Unit::add(const std::shared_ptr<core::Unit> &, core::Unit::Flags)
 {
-    throw std::runtime_error( "Not supported" );
+    throw std::runtime_error("Not supported");
 }
 
-std::string Unit::generateShift(unsigned int level) const
+std::string core::generateShift(unsigned int level)
 {
-    static const auto DEFAULT_SHIFT = " ";
-    std::string result;
-    for( unsigned int i = 0; i < level; ++i ) {
-        result += DEFAULT_SHIFT;
-    }
-    return result;
-}
-
-// -------------------------------------------------- *** --------------------------------------------------
-
-PrintOperatorUnit::PrintOperatorUnit(const std::string &text)
-    : m_text(text)
-{ }
-
-std::string PrintOperatorUnit::compile(unsigned int level) const
-{
-    return generateShift( level ) + "printf( \"" + m_text + "\" );\n";
+    static const char DEFAULT_SHIFT = ' '; // TODO: support tabs via global config
+    return std::string(4 * level, DEFAULT_SHIFT);
 }

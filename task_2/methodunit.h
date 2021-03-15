@@ -4,7 +4,7 @@
 #include "unit.h"
 #include <vector>
 
-class MethodUnit : public Unit {
+class MethodUnit : public core::Unit {
 public:
     enum Modifier {
         STATIC = 1,

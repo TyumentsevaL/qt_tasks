@@ -2,10 +2,9 @@
 #define CLASSUNIT_H
 
 #include "unit.h"
-
 #include <vector>
 
-class ClassUnit : public Unit
+class ClassUnit : public core::Unit
 {
 public:
     enum AccessModifier {
