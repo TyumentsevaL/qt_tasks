@@ -33,6 +33,10 @@ FileWatcherWidget::FileWatcherWidget(QWidget *parent)
                 watchers[path]->deleteLater();
             }
             ui->filesListWidget->model()->removeRow(row);
+
+            if (ui->filesListWidget->count() == 0) {
+                ui->infoTextEdit->clear();
+            }
         }
     });
 
