@@ -58,6 +58,13 @@ public:
      */
     QStringList removePaths(const QStringList &paths);
 
+    /*!
+     * \brief setSendsInitInfo -- посылать ли инфу при добавлении файла. Если не посылать, то
+     * наблюдатели будут очставаться пустые до обновления файла, это не удобно
+     * \param sendsInit        -- посылать ли сигнал при добавлении файла
+     */
+    void setSendsInitInfo(bool sendsInit);
+
 signals:
     /*!
      * \brief fileChanged -- сигнал, что что-то поменялось в одном из наблюдаемых файлов
@@ -71,6 +78,7 @@ private:
 private:
     QTimer *m_checkTimer;
     QHash<QString, QFileInfo> m_watchedFilesData;
+    bool m_sendsInitInfo = false;
 };
 
 #endif // FILEWATCHERMANAGER_H
