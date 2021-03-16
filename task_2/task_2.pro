@@ -8,10 +8,12 @@ DESTDIR = $$PWD/../build
 SOURCES += \
         cpp_units.cpp \
         csharp_units.cpp \
+        java_units.cpp \
         main.cpp \
         core_units.cpp
 
 HEADERS += \
     cpp_units.h \
     core_units.h \
-    csharp_units.h
+    csharp_units.h \
+    java_units.h

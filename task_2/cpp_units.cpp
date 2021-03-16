@@ -1,5 +1,4 @@
 #include "cpp_units.h"
-
 #include <sstream>
 
 namespace cpp {

@@ -37,7 +37,9 @@ public:
         PRIVATE,
         INTERNAL,
         PROTECTED_INTERNAL,
-        PRIVATE_PROTECTED
+        PRIVATE_PROTECTED,
+        FINAL,
+        ABSTRACT
     };
     static const std::vector<std::string> ACCESS_MODIFIERS;
 
@@ -46,7 +48,7 @@ public:
 
 protected:
     using Fields = std::vector<std::shared_ptr<Unit>>;
-    Flags m_flags;
+    Flags m_flag;
     std::string m_name;
     std::vector<Fields> m_fields;
 };

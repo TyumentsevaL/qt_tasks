@@ -18,7 +18,7 @@ const std::vector<std::string> ClassUnit::ACCESS_MODIFIERS = { "public",
                                                                "private protected" };
 
 ClassUnit::ClassUnit(const std::string& name, core::Unit::Flags flags)
-    : m_flags(flags)
+    : m_flag(flags)
     , m_name(name)
 {
     m_fields.resize(ACCESS_MODIFIERS.size());

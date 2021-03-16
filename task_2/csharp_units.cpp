@@ -1,5 +1,4 @@
 #include "csharp_units.h"
-
 #include <sstream>
 
 namespace csharp {
@@ -7,7 +6,7 @@ namespace csharp {
 void CsharpClassUnit::add(const std::shared_ptr<core::Unit> &unit, core::Unit::Flags flags)
 {
     auto accessModifier = PRIVATE;
-    if (flags < ClassUnit::ACCESS_MODIFIERS.size()) {
+    if (flags <= PRIVATE_PROTECTED) { // потому что дальше java-спецификаторы
         accessModifier = static_cast<AccessModifier>(flags);
     }
     m_fields[accessModifier].push_back(unit);
@@ -16,14 +15,15 @@ void CsharpClassUnit::add(const std::shared_ptr<core::Unit> &unit, core::Unit::F
 std::string CsharpClassUnit::compile(unsigned int level) const
 {
     std::stringstream result;
-    result << core::generateShift(level) << ACCESS_MODIFIERS[m_flags]
+    result << core::generateShift(level) << ACCESS_MODIFIERS[m_flag]
               << " class " << m_name << " {\n";
 
     for (size_t i = 0; i < m_fields.size(); ++i)
     {
         // Как С++
-        if (m_fields[i].empty())
+        if (m_fields[i].empty()) {
             continue;
+        }
 
         for (const auto& field : m_fields[i]) {
             result << core::generateShift(level + 1)
@@ -42,7 +42,8 @@ std::string CsharpMethodUnit::compile(unsigned int level) const
 {
     std::stringstream result;
 
-    if (m_flags & Modifier::ABSTRACT && !(m_flags & Modifier::ASYNC)) {
+    if (m_flags & Modifier::ABSTRACT
+            && !(m_flags & Modifier::ASYNC) && !(m_flags & Modifier::STATIC)) {
         result << "abstract ";
     }
 
@@ -101,6 +102,5 @@ std::shared_ptr<core::PrintOperatorUnit> CsharpUnitFactory::createPrintOperatorU
 {
     return std::make_shared<CsharpPrintOperatorUnit>(text);
 }
-
 
 } // namespace csharp {
