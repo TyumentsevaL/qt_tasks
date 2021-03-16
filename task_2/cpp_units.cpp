@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+namespace cpp {
+
 void CppClassUnit::add(const std::shared_ptr<Unit> &unit, Unit::Flags flags)
 {
     auto accessModifier = PRIVATE;
@@ -79,4 +81,23 @@ std::string CppPrintOperatorUnit::compile(unsigned int level) const
        << m_text
        << "\" );\n";
     return ss.str();
+}
+
+// --------------------------------------------- *** --------------------------------------------- //
+
+std::shared_ptr<core::ClassUnit> CppUnitFactory::createClassUnit(const std::string &name) const
+{
+    return std::make_shared<CppClassUnit>(name);
+}
+
+std::shared_ptr<core::MethodUnit> CppUnitFactory::createMethodUnit(const std::string &name, const std::string &returnType, core::Unit::Flags flags) const
+{
+    return std::make_shared<CppMethodUnit>(name, returnType, flags);
+}
+
+std::shared_ptr<core::PrintOperatorUnit> CppUnitFactory::createPrintOperatorUnit(const std::string &text) const
+{
+    return std::make_shared<CppPrintOperatorUnit>(text);
+}
+
 }

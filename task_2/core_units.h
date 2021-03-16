@@ -10,13 +10,14 @@ namespace core {
  * \brief The Unit class это у нас типа abstract base для сущностей,
  * чтобы было дерево вложенности
  */
-class Unit {
+class Unit
+{
 public:
     using Flags = unsigned int;
 public:
     virtual ~Unit() = default;
 
-    virtual void add(const std::shared_ptr<Unit>&, Flags);
+    virtual void add(const std::shared_ptr<Unit>&, Flags = 0);
 
     virtual std::string compile(unsigned int level = 0) const = 0;
 };
@@ -75,7 +76,8 @@ protected:
 /*!
  * \brief The ClassUnit class это abstract base для вывода в консоль
  */
-class PrintOperatorUnit : public core::Unit {
+class PrintOperatorUnit : public core::Unit
+{
 public:
     explicit PrintOperatorUnit(const std::string& text);
 
@@ -91,19 +93,23 @@ protected:
 class UnitFactory
 {
 public:
+    /*!
+     * \brief The CompileLanguage enum не используется,
+     * просто может пригодиться для switch
+     */
     enum CompileLanguage {
-        CPP,
+        CPP = 1,
         CSHARP,
         JAVA
     };
 
     virtual ~UnitFactory() {}
 
-    virtual std::shared_ptr<ClassUnit> createClassUnit() = 0;
+    virtual std::shared_ptr<ClassUnit> createClassUnit(const std::string& name) const = 0;
 
-    virtual std::shared_ptr<MethodUnit> createMethodUnit() = 0;
+    virtual std::shared_ptr<MethodUnit> createMethodUnit(const std::string& name, const std::string& returnType, Unit::Flags flags) const = 0;
 
-    virtual std::shared_ptr<PrintOperatorUnit> createPrintOperatorUnit() = 0;
+    virtual std::shared_ptr<PrintOperatorUnit> createPrintOperatorUnit(const std::string& text) const = 0;
 };
 
 // --------------------------------------------- *** --------------------------------------------- //
