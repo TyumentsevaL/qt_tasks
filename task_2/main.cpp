@@ -1,8 +1,6 @@
 #include <iostream>
 
-#include "classunit.h"
-#include "methodunit.h"
-#include "printoperatorunit.h"
+#include "cpp_units.h"
 
 using namespace core;
 
