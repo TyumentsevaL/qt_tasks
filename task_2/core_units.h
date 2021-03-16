@@ -65,12 +65,11 @@ public:
         STATIC			= 1,
         CONST			= 1 << 1,
         VIRTUAL			= 1 << 2,
-        ABSTRACT		= 1 << 3,
-        ASYNC			= 1 << 4,
-        UNSAFE			= 1 << 5,
-        SEALED			= 1 << 6,
+        ABSTRACT		= 1 << 3, // вообще тут тела быть не должно, мб надо не включать это
+        UNSAFE			= 1 << 4,
+        SEALED			= 1 << 5,
         FINAL			= SEALED,
-        SYNCHRONIZED	= 1 << 8
+        SYNCHRONIZED	= 1 << 7
     };
 
 public:
@@ -108,16 +107,6 @@ protected:
 class UnitFactory
 {
 public:
-    /*!
-     * \brief The CompileLanguage enum не используется,
-     * просто может пригодиться для switch
-     */
-    enum CompileLanguage {
-        CPP = 1,
-        CSHARP,
-        JAVA
-    };
-
     virtual ~UnitFactory() {}
 
     /*!

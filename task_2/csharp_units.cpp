@@ -43,17 +43,13 @@ std::string CsharpMethodUnit::compile(unsigned int level) const
     std::stringstream result;
 
     if (m_flags & Modifier::ABSTRACT
-            && !(m_flags & Modifier::ASYNC) && !(m_flags & Modifier::STATIC)) {
+            && !(m_flags & Modifier::STATIC) && !(m_flags & Modifier::VIRTUAL)) {
         result << "abstract ";
     }
 
     // у методов он тоже что-то делает
     if (m_flags & Modifier::SEALED) {
         result << "sealed ";
-    }
-
-    if (m_flags & Modifier::ASYNC) {
-        result << "async ";
     }
 
     // для interop, я хз, что это
