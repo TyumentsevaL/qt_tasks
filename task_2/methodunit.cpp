@@ -2,18 +2,12 @@
 
 #include <sstream>
 
-MethodUnit::MethodUnit(const std::string& name, const std::string& returnType, Flags flags)
-    : m_name(name)
-    , m_returnType(returnType)
-    , m_flags(flags)
-{ }
-
-void MethodUnit::add(const std::shared_ptr<Unit> &unit, Unit::Flags)
+void CppMethodUnit::add(const std::shared_ptr<Unit> &unit, Unit::Flags)
 {
     m_body.push_back(unit);
 }
 
-std::string MethodUnit::compile(unsigned int level) const
+std::string CppMethodUnit::compile(unsigned int level) const
 {
     std::stringstream result;
     result << core::generateShift(level);

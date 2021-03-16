@@ -3,14 +3,10 @@
 
 #include "unit.h"
 
-class PrintOperatorUnit : public core::Unit {
+class CppPrintOperatorUnit : public core::PrintOperatorUnit {
 public:
-    explicit PrintOperatorUnit(const std::string& text);
-
+    using PrintOperatorUnit::PrintOperatorUnit;
     std::string compile( unsigned int level = 0 ) const;
-
-private:
-    std::string m_text;
 };
 
 #endif // PRINTOPERATORUNIT_H

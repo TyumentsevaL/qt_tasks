@@ -4,18 +4,20 @@
 #include "methodunit.h"
 #include "printoperatorunit.h"
 
+using namespace core;
+
 std::string generateProgram() {
-    ClassUnit myClass("MyClass");
+    CppClassUnit myClass("MyClass");
 
-    myClass.add(std::make_shared<MethodUnit>("testFunc1", "void", 0),
+    myClass.add(std::make_shared<CppMethodUnit>("testFunc1", "void", 0),
                 ClassUnit::PUBLIC);
-    myClass.add(std::make_shared<MethodUnit>("testFunc2", "void", MethodUnit::STATIC),
+    myClass.add(std::make_shared<CppMethodUnit>("testFunc2", "void", MethodUnit::STATIC),
                 ClassUnit::PRIVATE);
-    myClass.add(std::make_shared<MethodUnit>("testFunc3", "void", MethodUnit::VIRTUAL | MethodUnit::CONST),
+    myClass.add(std::make_shared<CppMethodUnit>("testFunc3", "void", MethodUnit::VIRTUAL | MethodUnit::CONST),
                 ClassUnit::PUBLIC);
 
-    auto method = std::make_shared<MethodUnit>("testFunc4", "void", MethodUnit::STATIC);
-    method->add(std::make_shared<PrintOperatorUnit>(R"(Hello, world!\n)" ));
+    auto method = std::make_shared<CppMethodUnit>("testFunc4", "void", MethodUnit::STATIC);
+    method->add(std::make_shared<CppPrintOperatorUnit>(R"(Hello, world!\n)" ));
     myClass.add(method, ClassUnit::PROTECTED);
 
     return myClass.compile();

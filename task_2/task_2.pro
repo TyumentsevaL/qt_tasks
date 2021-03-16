@@ -16,5 +16,4 @@ HEADERS += \
     classunit.h \
     methodunit.h \
     printoperatorunit.h \
-    unit.h \
-    unitfactory.h
+    unit.h

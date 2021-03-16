@@ -2,30 +2,15 @@
 #define CLASSUNIT_H
 
 #include "unit.h"
-#include <vector>
 
-class ClassUnit : public core::Unit
+class CppClassUnit : public core::ClassUnit
 {
 public:
-    enum AccessModifier {
-        PUBLIC,
-        PROTECTED,
-        PRIVATE
-    };
-    static const std::vector< std::string > ACCESS_MODIFIERS;
-
-public:
-    explicit ClassUnit(const std::string& name);
+    using ClassUnit::ClassUnit;
 
     void add(const std::shared_ptr<Unit>& unit, Flags flags);
 
     std::string compile(unsigned int level = 0) const;
-
-private:
-    std::string m_name;
-
-    using Fields = std::vector<std::shared_ptr<Unit>>;
-    std::vector<Fields> m_fields;
 };
 
 #endif // CLASSUNIT_H
