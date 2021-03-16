@@ -12,10 +12,14 @@ void core::Unit::add(const std::shared_ptr<core::Unit> &, core::Unit::Flags)
 
 const std::vector<std::string> ClassUnit::ACCESS_MODIFIERS = { "public",
                                                                "protected",
-                                                               "private" };
+                                                               "private",
+                                                               "internal",
+                                                               "protected internal",
+                                                               "private protected" };
 
-ClassUnit::ClassUnit(const std::string& name)
-    : m_name(name)
+ClassUnit::ClassUnit(const std::string& name, core::Unit::Flags flags)
+    : m_flags(flags)
+    , m_name(name)
 {
     m_fields.resize(ACCESS_MODIFIERS.size());
 }
@@ -27,6 +31,11 @@ MethodUnit::MethodUnit(const std::string& name, const std::string& returnType, F
     , m_returnType(returnType)
     , m_flags(flags)
 { }
+
+void MethodUnit::add(const std::shared_ptr<Unit>& unit, Unit::Flags)
+{
+    m_body.push_back(unit);
+}
 
 // --------------------------------------------- *** --------------------------------------------- //
 

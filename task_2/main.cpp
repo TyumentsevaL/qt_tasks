@@ -2,15 +2,16 @@
 #include <unordered_map>
 
 #include "cpp_units.h"
+#include "csharp_units.h"
 
 std::string generateProgram(std::shared_ptr<core::UnitFactory> &factory)
 {
     using namespace core;
-    std::shared_ptr<ClassUnit> myClass = factory->createClassUnit("MyClass");
+    std::shared_ptr<ClassUnit> myClass = factory->createClassUnit("MyClass", ClassUnit::PRIVATE_PROTECTED);
 
     myClass->add(factory->createMethodUnit("testFunc1", "void", 0)
                  , ClassUnit::PUBLIC);
-    myClass->add(factory->createMethodUnit("testFunc2", "void", MethodUnit::STATIC)
+    myClass->add(factory->createMethodUnit("testFunc2", "void", MethodUnit::STATIC | MethodUnit::UNSAFE)
                  , ClassUnit::PRIVATE);
     myClass->add(factory->createMethodUnit("testFunc3", "void", MethodUnit::VIRTUAL | MethodUnit::CONST)
                  , ClassUnit::PUBLIC);
@@ -35,7 +36,9 @@ int main(int argc, char *argv[])
 //        return -1;
 //    }
 
-    int option = 1; //cpp
+    // -----------------------------------------------
+
+    int option = 2; //cpp
     if (argc == 2) {
         option = std::atoi(argv[1]);
         if (/*option <= 0 || option >= 4*/ option != 1) {
@@ -45,7 +48,8 @@ int main(int argc, char *argv[])
     }
 
     std::unordered_map<int, std::shared_ptr<core::UnitFactory>> factories = {
-        {1, std::make_shared<cpp::CppUnitFactory>()}
+        {1, std::make_shared<cpp::CppUnitFactory>()},
+        {2, std::make_shared<csharp::CsharpUnitFactory>()}
     };
 
     std::cout << generateProgram(factories[option]) << std::endl;

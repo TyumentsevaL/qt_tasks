@@ -26,6 +26,7 @@ public:
 
 /*!
  * \brief The ClassUnit class это abstract base для классов
+ * Пришлось подправить всякое из-за managed языков, там у класса тоже модификаторы
  */
 class ClassUnit : public Unit
 {
@@ -33,15 +34,19 @@ public:
     enum AccessModifier {
         PUBLIC,
         PROTECTED,
-        PRIVATE
+        PRIVATE,
+        INTERNAL,
+        PROTECTED_INTERNAL,
+        PRIVATE_PROTECTED
     };
     static const std::vector<std::string> ACCESS_MODIFIERS;
 
 public:
-    explicit ClassUnit(const std::string& name);
+    explicit ClassUnit(const std::string& name, core::Unit::Flags flags = 0);
 
 protected:
     using Fields = std::vector<std::shared_ptr<Unit>>;
+    Flags m_flags;
     std::string m_name;
     std::vector<Fields> m_fields;
 };
@@ -55,19 +60,27 @@ class MethodUnit : public Unit
 {
 public:
     enum Modifier {
-        STATIC = 1,
-        CONST = 1 << 1,
-        VIRTUAL = 1 << 2
+        STATIC			= 1,
+        CONST			= 1 << 1,
+        VIRTUAL			= 1 << 2,
+        ABSTRACT		= 1 << 3,
+        ASYNC			= 1 << 4,
+        UNSAFE			= 1 << 5,
+        SEALED			= 1 << 6,
+        FINAL			= SEALED,
+        SYNCHRONIZED	= 1 << 8
     };
 
 public:
     MethodUnit(const std::string& name, const std::string& returnType, Flags flags);
 
+    void add(const std::shared_ptr<Unit>& unit, Flags = 0) override;
+
 protected:
     std::string m_name;
     std::string m_returnType;
-
     Flags m_flags;
+
     std::vector<std::shared_ptr<Unit>> m_body;
 };
 
@@ -105,7 +118,14 @@ public:
 
     virtual ~UnitFactory() {}
 
-    virtual std::shared_ptr<ClassUnit> createClassUnit(const std::string& name) const = 0;
+    /*!
+     * \brief createClassUnit -- создаёт сущность для "компиляции" класса. Не факт, что все corner-case
+     * тонкости учтены в потомках, но абстрактная фабрика демонстрируется.
+     * \param name            -- имя класса, тут понятно
+     * \param flags           -- в C# и Java имеют модификаторы доступа к классу, потому тут флаг. C++ пусть игнорирует
+     * \return                -- полиморфный указатель на юнит класса какого-то языка вернётся
+     */
+    virtual std::shared_ptr<ClassUnit> createClassUnit(const std::string& name, Unit::Flags flags = 0) const = 0;
 
     virtual std::shared_ptr<MethodUnit> createMethodUnit(const std::string& name, const std::string& returnType, Unit::Flags flags) const = 0;
 
