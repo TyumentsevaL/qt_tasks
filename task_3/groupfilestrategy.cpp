@@ -41,7 +41,7 @@ QHash<QString, QString> GroupFileStrategy::getDirectoryInfo(const QString &path)
 #else
         QString typeName = it.isDir()
                     ? GroupFileStrategy::DIR_MIME
-                    : it.completeSuffix();
+                    : it.suffix();
 #endif
         typeSizes[typeName] += current;
     }

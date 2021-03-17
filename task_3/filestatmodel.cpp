@@ -53,12 +53,12 @@ QVariant FileStatModel::data(const QModelIndex &index, int role) const
         } else {
             cacheKey = QFileInfo(filePath(index)).isDir()
                     ? "dir"
-                    : QFileInfo(filePath(index)).completeSuffix();
+                    : QFileInfo(filePath(index)).suffix();
         }
         if (m_cachedStats.contains(cacheKey)) {
             statData = m_cachedStats[cacheKey];
             if (m_statIsGrouped) {
-                statData += " (by type)";
+                statData += QString(" (by type %1)").arg(cacheKey);
             }
         }
         return statData;

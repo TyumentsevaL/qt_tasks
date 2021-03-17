@@ -9,8 +9,6 @@
 #include "listfilestrategy.h"
 #include "groupfilestrategy.h"
 
-#include <QDebug>
-
 DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::DirectoryStatsMainWindow)
@@ -25,7 +23,9 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
 
     connect(ui->choosePushButton, &QAbstractButton::clicked, [this]{
         const QString path = QFileDialog::getExistingDirectory(this, "Выберите папку для статистики", QDir::currentPath());
-        chooseTreeFolder(path);
+        if (!path.isEmpty()) {
+            chooseTreeFolder(path);
+        }
     });
     ui->listFilesRadioButton->setChecked(true);
 
