@@ -17,7 +17,7 @@ public:
     virtual QList<FileInfo> getDirectoryInfo(const QString &path) = 0;
 
 protected:
-    qint64 getTotalDirSize(const QString &path);
+    qint64 getTotalSize(const QString &path);
 
     static constexpr double SIZE_PRESIZION = 0.0001;
 

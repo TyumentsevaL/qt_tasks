@@ -7,9 +7,11 @@ DESTDIR = $$PWD/../build
 
 SOURCES += \
         abstractdirectorystrategy.cpp \
+        groupfilestrategy.cpp \
         listfilestrategy.cpp \
         main.cpp
 
 HEADERS += \
     abstractdirectorystrategy.h \
+    groupfilestrategy.h \
     listfilestrategy.h
