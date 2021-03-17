@@ -22,6 +22,18 @@ public:
 
     void setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy);
 
+    void updateStatistics();
+
+    /*!
+     * \brief setStatsGrouped -- это костыль, потому что задумка со стратегиями
+     * совершенно загадочна. Мб это сраюотало бы для переписанной модели, которая
+     * отображает типы файлов сразу, но пока так пусть будет
+     * \param grouped         -- смотреть ли по расширениям
+     */
+    void setStatsGrouped(bool grouped);
+
+    // -----------
+
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -29,8 +41,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
+    bool m_statIsGrouped = false;
     QSharedPointer<AbstractDirectoryStrategy> m_statStrategy = nullptr;
-    QList<QPair<QString, QString>> m_cachedStats;
+    QHash<QString, QString> m_cachedStats;
 };
 
 #endif // FILESTATMODEL_H

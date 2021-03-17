@@ -18,20 +18,22 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-#if 0
+#if 1
     QSharedPointer<AbstractDirectoryStrategy> strategy = QSharedPointer<ListFileStrategy>::create();
 
     const QString currentDir = QDir::currentPath();
-    for (auto& item : strategy->getDirectoryInfo(currentDir)) {
-        qDebug() << QFileInfo(item.first).fileName() << " : " << item.second;
+    auto info = strategy->getDirectoryInfo(currentDir);
+    for (const auto& item : info.keys()) {
+        qDebug() << QFileInfo(item).fileName() << " : " << info[item];
     }
     return a.exec();
 #else
     QSharedPointer<AbstractDirectoryStrategy> strategy = QSharedPointer<GroupFileStrategy>::create();
 
     const QString currentDir = QDir::currentPath();
-    for (auto& item : strategy->getDirectoryInfo(currentDir + "/..")) {
-        qDebug() << item.first << " : " << item.second;
+    auto info = strategy->getDirectoryInfo(currentDir + "/..");
+    for (const auto& item : info.keys()) {
+        qDebug() << item << " : " << info[item];
     }
     return a.exec();
 #endif

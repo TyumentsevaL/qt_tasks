@@ -44,17 +44,24 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
 
     // -------------
     auto strategyToggler =  [this]{
-        if (ui->listFilesRadioButton->isChecked()) {
+        bool goodStats = ui->listFilesRadioButton->isChecked();
+        if (goodStats) {
             m_treeModel->setStatisticsStrategy(fileStatStrategy);
             m_tableModel->setStatisticsStrategy(fileStatStrategy);
         } else {
             m_treeModel->setStatisticsStrategy(fileGroupStatStrategy);
             m_tableModel->setStatisticsStrategy(fileGroupStatStrategy);
         }
+
+        m_treeModel->updateStatistics();
+        m_tableModel->updateStatistics();
+        m_treeModel->setStatsGrouped(!goodStats);
+        m_tableModel->setStatsGrouped(!goodStats);
     };
 
     connect(ui->listFilesRadioButton, &QRadioButton::toggled, this, strategyToggler);
     connect(ui->groupFilesRadioButton, &QRadioButton::toggled, this, strategyToggler);
+    strategyToggler();
 
     // -------------
     chooseTreeFolder(QDir::currentPath());
