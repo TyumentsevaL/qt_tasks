@@ -5,6 +5,8 @@
     #include <QDebug>
 #endif
 
+#ifndef GUI_VERSION
+
 #include <QSharedPointer>
 #include <QFileInfo>
 #include <QDir>
@@ -12,7 +14,6 @@
 #include "listfilestrategy.h"
 #include "groupfilestrategy.h"
 
-#ifndef GUI_VERSION
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -38,8 +39,6 @@ int main(int argc, char *argv[])
 #else // --------------------------------------------------------------
 
 #include "directorystatsmainwindow.h"
-
-//#include <QWidget>
 
 int main(int argc, char *argv[])
 {
