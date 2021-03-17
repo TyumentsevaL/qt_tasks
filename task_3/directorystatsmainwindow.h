@@ -7,6 +7,9 @@ namespace Ui {
 class DirectoryStatsMainWindow;
 }
 
+class FileStatModel;
+class QModelIndex;
+
 class DirectoryStatsMainWindow : public QWidget
 {
     Q_OBJECT
@@ -16,7 +19,13 @@ public:
     ~DirectoryStatsMainWindow();
 
 private:
-    Ui::DirectoryStatsMainWindow *ui;
+    void chooseTreeFolder(const QString &path);
+    void handleTreeSelection(const QModelIndex &index);
+
+private:
+    const QSharedPointer<Ui::DirectoryStatsMainWindow> ui;
+    FileStatModel *m_treeModel;
+    FileStatModel *m_tableModel;
 };
 
 #endif // DIRECTORYSTATSMAINWINDOW_H

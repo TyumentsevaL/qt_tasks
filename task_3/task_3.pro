@@ -22,10 +22,12 @@ equals(BUILD_MODE, "GUI") {
     DEFINES += GUI_VERSION
 
     SOURCES += \
-        directorystatsmainwindow.cpp
+        directorystatsmainwindow.cpp \
+        filestatmodel.cpp
 
     HEADERS += \
-        directorystatsmainwindow.h
+        directorystatsmainwindow.h \
+        filestatmodel.h
 
     FORMS += \
         directorystatsmainwindow.ui
