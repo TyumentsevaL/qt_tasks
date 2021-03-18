@@ -26,7 +26,6 @@ void ChartUpdater::setDisplayMode(ChartUpdater::DisplayMode mode)
 
 void ChartUpdater::updateStatisticsImpl(const QString& path)
 {
-    qDebug() << "chart" << path;
     auto info = m_statStrategy->getDirectoryInfo(path);
     m_chart->removeAllSeries();
 

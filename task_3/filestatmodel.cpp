@@ -2,7 +2,6 @@
 #include "abstractdirectorystrategy.h"
 
 #include <QFileInfo>
-#include <QDebug>
 
 namespace  {
 static constexpr double SIZE_PRESIZION = 0.0001;
@@ -65,7 +64,6 @@ QVariant CustomFileModel::data(const QModelIndex &index, int role) const
 
 void CustomFileModel::updateStatisticsImpl(const QString &path)
 {
-    qDebug() << "model" << path;
     m_cachedStats = m_statStrategy->getDirectoryInfo(path);
     emit layoutChanged(); // force update view
 }
