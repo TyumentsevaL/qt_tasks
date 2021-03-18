@@ -8,13 +8,14 @@ SOURCES += \
 
 HEADERS += \
     abstractdirectorystrategy.h \
+    abstractstatholder.h \
     groupfilestrategy.h \
     listfilestrategy.h
 
 BUILD_MODE = "GUI"
 
 equals(BUILD_MODE, "GUI") {
-    QT += core gui widgets
+    QT += core gui widgets charts
 
     CONFIG += c++11
     CONFIG -= console
@@ -23,11 +24,13 @@ equals(BUILD_MODE, "GUI") {
 
     SOURCES += \
         directorystatsmainwindow.cpp \
-        filestatmodel.cpp
+        filestatmodel.cpp \
+        chartupdater.cpp
 
     HEADERS += \
         directorystatsmainwindow.h \
-        filestatmodel.h
+        filestatmodel.h \
+        chartupdater.h
 
     FORMS += \
         directorystatsmainwindow.ui

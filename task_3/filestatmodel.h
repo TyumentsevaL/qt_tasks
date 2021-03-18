@@ -1,9 +1,8 @@
 #ifndef FILESTATMODEL_H
 #define FILESTATMODEL_H
 
+#include "abstractstatholder.h"
 #include <QFileSystemModel>
-
-class AbstractDirectoryStrategy;
 
 /*!
  * \brief The FileStatModel class это моделька, которая и
@@ -14,15 +13,15 @@ class AbstractDirectoryStrategy;
  *
  * Двигать секции тоже нельзя, харкдок, пардон.
  */
-class FileStatModel : public QFileSystemModel
+class CustomFileModel : public QFileSystemModel, public AbstractStatHolder
 {
     Q_OBJECT
 public:
-    explicit FileStatModel(QObject *parent = nullptr);
+    explicit CustomFileModel(QObject *parent = nullptr);
 
-    void setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy);
+    void setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy) override;
 
-    void updateStatistics();
+    void updateStatistics() override;
 
     /*!
      * \brief setStatsGrouped -- это костыль, потому что задумка со стратегиями
@@ -43,7 +42,7 @@ public:
 private:
     bool m_statIsGrouped = false;
     QSharedPointer<AbstractDirectoryStrategy> m_statStrategy = nullptr;
-    QHash<QString, QString> m_cachedStats;
+    QHash<QString, double> m_cachedStats;
 };
 
 #endif // FILESTATMODEL_H

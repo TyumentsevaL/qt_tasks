@@ -4,6 +4,10 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QVBoxLayout>
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+#include <QtCharts/QValueAxis>
 
 #include "filestatmodel.h"
 #include "listfilestrategy.h"
@@ -12,10 +16,13 @@
 DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::DirectoryStatsMainWindow)
-    , m_treeModel(new FileStatModel(this))
-    , m_tableModel(new FileStatModel(this))
-    , fileStatStrategy(QSharedPointer<ListFileStrategy>::create())
-    , fileGroupStatStrategy(QSharedPointer<GroupFileStrategy>::create())
+    , m_treeModel(new CustomFileModel(this))
+    , m_tableModel(new CustomFileModel(this))
+    , m_fileStatStrategy(QSharedPointer<ListFileStrategy>::create())
+    , m_fileGroupStatStrategy(QSharedPointer<GroupFileStrategy>::create())
+    , m_chart(new QtCharts::QChart)
+    , m_axisY(new QtCharts::QValueAxis)
+    , m_chartView(new QtCharts::QChartView(m_chart.data(), this))
 {
     ui->setupUi(this);
 
@@ -46,11 +53,11 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     auto strategyToggler =  [this]{
         bool goodStats = ui->listFilesRadioButton->isChecked();
         if (goodStats) {
-            m_treeModel->setStatisticsStrategy(fileStatStrategy);
-            m_tableModel->setStatisticsStrategy(fileStatStrategy);
+            m_treeModel->setStatisticsStrategy(m_fileStatStrategy);
+            m_tableModel->setStatisticsStrategy(m_fileStatStrategy);
         } else {
-            m_treeModel->setStatisticsStrategy(fileGroupStatStrategy);
-            m_tableModel->setStatisticsStrategy(fileGroupStatStrategy);
+            m_treeModel->setStatisticsStrategy(m_fileGroupStatStrategy);
+            m_tableModel->setStatisticsStrategy(m_fileGroupStatStrategy);
         }
 
         m_treeModel->updateStatistics();
@@ -65,6 +72,24 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
 
     // -------------
     chooseTreeFolder(QDir::currentPath());
+    ui->statsViewStackedWidget->setCurrentIndex(0); // table
+
+    // ------------- *** charts *** ------------- //
+
+    QVBoxLayout *layout = new QVBoxLayout(ui->chartPage);
+    ui->chartPage->setLayout(layout);
+    layout->setMargin(0);
+    layout->addWidget(m_chartView);
+
+    m_chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
+    m_chart->addAxis(m_axisY.data(), Qt::AlignLeft);
+    m_chart->legend()->setVisible(true);
+    m_chart->legend()->setAlignment(Qt::AlignBottom);
+
+    connect(ui->statsComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int index) {
+        ui->statsViewStackedWidget->setCurrentIndex(index > 0 ? 1 : 0);
+    });
+
 }
 
 DirectoryStatsMainWindow::~DirectoryStatsMainWindow()

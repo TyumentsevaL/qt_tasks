@@ -3,7 +3,11 @@
 
 #include <QFileInfo>
 
-FileStatModel::FileStatModel(QObject *parent)
+namespace  {
+    static constexpr double SIZE_PRESIZION = 0.0001;
+}
+
+CustomFileModel::CustomFileModel(QObject *parent)
     : QFileSystemModel(parent)
 {
     connect(this, &QFileSystemModel::rootPathChanged, [this](const QString& /*newPath*/) {
@@ -13,30 +17,30 @@ FileStatModel::FileStatModel(QObject *parent)
     });
 }
 
-void FileStatModel::setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy)
+void CustomFileModel::setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy)
 {
     m_statStrategy = strategy;
     updateStatistics();
 }
 
-void FileStatModel::updateStatistics()
+void CustomFileModel::updateStatistics()
 {
     m_cachedStats = m_statStrategy->getDirectoryInfo(rootPath());
     emit layoutChanged(); // force update view
 }
 
-void FileStatModel::setStatsGrouped(bool grouped)
+void CustomFileModel::setStatsGrouped(bool grouped)
 {
     m_statIsGrouped = grouped;
 }
 
-int FileStatModel::columnCount(const QModelIndex &parent) const
+int CustomFileModel::columnCount(const QModelIndex &parent) const
 {
     int realColumnCount = QFileSystemModel::columnCount(parent);
     return realColumnCount + 1;
 }
 
-QVariant FileStatModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CustomFileModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && section == columnCount() - 1 && role == Qt::DisplayRole) {
         return QStringLiteral("Stats");
@@ -44,10 +48,11 @@ QVariant FileStatModel::headerData(int section, Qt::Orientation orientation, int
     return QFileSystemModel::headerData(section, orientation, role);
 }
 
-QVariant FileStatModel::data(const QModelIndex &index, int role) const
+QVariant CustomFileModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && index.column() == columnCount() - 1 && role == Qt::DisplayRole) {
-        QString statData, cacheKey;
+        QString cacheKey;
+        double statData;
         if (!m_statIsGrouped) {
             cacheKey = QFileInfo(filePath(index)).absoluteFilePath();
         } else {
@@ -55,13 +60,22 @@ QVariant FileStatModel::data(const QModelIndex &index, int role) const
                     ? "dir"
                     : QFileInfo(filePath(index)).suffix();
         }
+
+        QString statDisplay;
         if (m_cachedStats.contains(cacheKey)) {
             statData = m_cachedStats[cacheKey];
+
+            if (statData > SIZE_PRESIZION) {
+                statDisplay = QString::number(statData * 100., 'f', 2) + "%";
+            } else {
+                statDisplay = "< 0.01%";
+            }
+
             if (m_statIsGrouped) {
-                statData += QString(" (by type %1)").arg(cacheKey);
+                statDisplay += QString(" (by type %1)").arg(cacheKey);
             }
         }
-        return statData;
+        return statDisplay;
     }
 
     return QFileSystemModel::data(index, role);

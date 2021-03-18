@@ -7,9 +7,15 @@ namespace Ui {
 class DirectoryStatsMainWindow;
 }
 
+namespace QtCharts {
+    class QChartView;
+    class QChart;
+    class QValueAxis;
+}
+
 QT_FORWARD_DECLARE_CLASS(QModelIndex)
 class AbstractDirectoryStrategy;
-class FileStatModel;
+class CustomFileModel;
 
 class DirectoryStatsMainWindow : public QWidget
 {
@@ -25,11 +31,15 @@ private:
 
 private:
     const QSharedPointer<Ui::DirectoryStatsMainWindow> ui;
-    FileStatModel *m_treeModel;
-    FileStatModel *m_tableModel;
+    CustomFileModel *m_treeModel;
+    CustomFileModel *m_tableModel;
 
-    QSharedPointer<AbstractDirectoryStrategy> fileStatStrategy;
-    QSharedPointer<AbstractDirectoryStrategy> fileGroupStatStrategy;
+    QSharedPointer<AbstractDirectoryStrategy> m_fileStatStrategy;
+    QSharedPointer<AbstractDirectoryStrategy> m_fileGroupStatStrategy;
+
+    QSharedPointer<QtCharts::QChart> m_chart;
+    QSharedPointer<QtCharts::QValueAxis> m_axisY;
+    QtCharts::QChartView *m_chartView;
 };
 
 #endif // DIRECTORYSTATSMAINWINDOW_H
