@@ -10,16 +10,13 @@
 class AbstractDirectoryStrategy
 {
 public:
-    using FileInfo = QPair<QString, QString>;
-
     virtual ~AbstractDirectoryStrategy() {}
 
-    virtual QList<FileInfo> getDirectoryInfo(const QString &path) = 0;
+    // TODO: improve caching
+    virtual QHash<QString, double> getDirectoryInfo(const QString &path) = 0;
 
 protected:
     qint64 getTotalSize(const QString &path);
-
-    static constexpr double SIZE_PRESIZION = 0.0001;
 
 protected:
     QHash<QString, qint64> m_dirSizeCache; // optimization

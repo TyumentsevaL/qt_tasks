@@ -11,17 +11,17 @@
     const QString GroupFileStrategy::DIR_MIME = "dir";
 #endif
 
-QList<AbstractDirectoryStrategy::FileInfo> GroupFileStrategy::getDirectoryInfo(const QString &path)
+QHash<QString, double> GroupFileStrategy::getDirectoryInfo(const QString &path)
 {
-    QList<AbstractDirectoryStrategy::FileInfo> result;
+    QHash<QString, double> result;
 
     if (!QFile::exists(path)) {
-        return result;
+        return {};
     }
 
     const QFileInfo pathInfo(path);
     if (!pathInfo.isDir()) {
-        result.append(qMakePair(path, QStringLiteral("100%")));
+        result.insert(path, 1);
     }
 
     qint64 total = getTotalSize(pathInfo.absoluteFilePath()); // hope, caching works
@@ -41,7 +41,7 @@ QList<AbstractDirectoryStrategy::FileInfo> GroupFileStrategy::getDirectoryInfo(c
 #else
         QString typeName = it.isDir()
                     ? GroupFileStrategy::DIR_MIME
-                    : it.completeSuffix();
+                    : it.suffix();
 #endif
         typeSizes[typeName] += current;
     }
@@ -49,11 +49,7 @@ QList<AbstractDirectoryStrategy::FileInfo> GroupFileStrategy::getDirectoryInfo(c
     for (const QString &typeName : typeSizes.keys()) {
         qint64 current = typeSizes[typeName];
         double percent = 1. * current / total;
-        if (percent > SIZE_PRESIZION) {
-            result.append(qMakePair(typeName, QString::number(percent * 100, 'f', 2) + "%"));
-        } else {
-            result.append(qMakePair(typeName, QString("< 0.01%")));
-        }
+        result.insert(typeName, percent);
     }
 
     return result;
