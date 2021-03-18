@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     int option = 1;
     if (argc == 2) {
         option = std::atoi(argv[1]);
-        if (/*option <= 0 || option >= 4*/ option != 1) {
+        if (option <= 0 || option >= 4) {
             std::cerr << "Language options are: 1 -- cpp, 2 -- csharp, 3 -- java" << std::endl;
             return -1;
         }

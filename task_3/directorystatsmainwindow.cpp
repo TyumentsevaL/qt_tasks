@@ -127,6 +127,8 @@ void DirectoryStatsMainWindow::updateStatsViews()
 
     // отдельно!!!
     m_treeModel->setStatisticsStrategy(goodStats ? m_fileStatStrategy : m_fileGroupStatStrategy);
+    m_treeModel->setStatsGrouped(!goodStats);
+    m_treeModel->updateStatistics(m_treeModel->rootPath());
 
     for (AbstractStatHolder* statHolder : m_statHolders) {
         statHolder->setStatisticsStrategy(goodStats ? m_fileStatStrategy : m_fileGroupStatStrategy);

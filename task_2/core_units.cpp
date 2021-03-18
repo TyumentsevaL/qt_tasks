@@ -45,7 +45,7 @@ PrintOperatorUnit::PrintOperatorUnit(const std::string &text)
 
 // --------------------------------------------- *** --------------------------------------------- //
 
-std::string core::generateShift(unsigned int level)
+std::string generateShift(unsigned int level)
 {
     static const char DEFAULT_SHIFT = ' '; // TODO: support tabs via global config
     return std::string(4 * level, DEFAULT_SHIFT);
