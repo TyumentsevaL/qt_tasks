@@ -6,6 +6,7 @@
 
 namespace QtCharts {
     class QChart;
+    class QValueAxis;
 }
 
 class ChartUpdater : public QObject, public AbstractStatHolder
@@ -21,14 +22,13 @@ public:
 
     void setDisplayMode(DisplayMode mode);
 
-    void setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy) override;
-
-    void updateStatistics() override;
+protected:
+    void updateStatisticsImpl(const QString& path) override;
 
 private:
-    QSharedPointer<AbstractDirectoryStrategy> m_statStrategy = nullptr;
-    QSharedPointer<QtCharts::QChart> m_chart;
     DisplayMode m_mode;
+    QSharedPointer<QtCharts::QChart> m_chart;
+    QSharedPointer<QtCharts::QValueAxis> m_axisY;
 };
 
 #endif // CHARTUPDATER_H

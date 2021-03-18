@@ -12,6 +12,7 @@ class AbstractDirectoryStrategy
 public:
     virtual ~AbstractDirectoryStrategy() {}
 
+    // TODO: improve caching
     virtual QHash<QString, double> getDirectoryInfo(const QString &path) = 0;
 
 protected:

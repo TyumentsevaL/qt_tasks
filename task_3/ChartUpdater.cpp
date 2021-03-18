@@ -5,39 +5,49 @@
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QBarSet>
+#include <QtCharts/QValueAxis>
+
+#include <QtDebug>
 
 ChartUpdater::ChartUpdater(const QSharedPointer<QtCharts::QChart> &chart, QObject *parent)
     : QObject(parent)
-    , m_chart(chart)
     , m_mode(PIE_MODE)
-{ }
+    , m_chart(chart)
+    , m_axisY(new QtCharts::QValueAxis)
+{
+    m_chart->addAxis(m_axisY.data(), Qt::AlignLeft);
+}
 
 void ChartUpdater::setDisplayMode(ChartUpdater::DisplayMode mode)
 {
     m_mode = mode;
-    updateStatistics();
+    updateStatistics(m_path);
 }
 
-void ChartUpdater::setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy)
+void ChartUpdater::updateStatisticsImpl(const QString& path)
 {
-    m_statStrategy = strategy;
-}
+    qDebug() << "chart" << path;
+    auto info = m_statStrategy->getDirectoryInfo(path);
+    m_chart->removeAllSeries();
 
-void ChartUpdater::updateStatistics()
-{
     if (m_mode == PIE_MODE)
     {
-//        m_chart->removeAllSeries();
-//        QtCharts::QPieSeries *series = new QtCharts::QPieSeries();
-//        auto info = m_statStrategy->getDirectoryInfo();
-//        for (auto& name : info.keys()) {
-//            series->append(fileMode ? QFileInfo(name).fileName() : name, info[name]);
-//        }
-//        chart->addSeries(series);
+        QtCharts::QPieSeries *series = new QtCharts::QPieSeries();
+        for (auto& name : info.keys()) {
+            series->append(!m_statIsGrouped ? QFileInfo(name).fileName() : name, info[name]);
+        }
+        m_chart->addSeries(series);
     }
 
     if (m_mode == BAR_MODE)
     {
-
+        QtCharts::QBarSeries *series = new QtCharts::QBarSeries();
+        for (auto& name : info.keys()) {
+            QtCharts::QBarSet *set0 = new QtCharts::QBarSet(!m_statIsGrouped ? QFileInfo(name).fileName() : name);
+            *set0<< info[name];
+            series->append(set0);
+        }
+        m_chart->addSeries(series);
+        series->attachAxis(m_axisY.data());
     }
 }

@@ -10,12 +10,13 @@ class DirectoryStatsMainWindow;
 namespace QtCharts {
     class QChartView;
     class QChart;
-    class QValueAxis;
 }
 
 QT_FORWARD_DECLARE_CLASS(QModelIndex)
 class AbstractDirectoryStrategy;
+class AbstractStatHolder;
 class CustomFileModel;
+class ChartUpdater;
 
 class DirectoryStatsMainWindow : public QWidget
 {
@@ -29,6 +30,9 @@ private:
     void chooseTreeFolder(const QString &path);
     void handleTreeSelection(const QModelIndex &index);
 
+private slots:
+    void updateStatsViews();
+
 private:
     const QSharedPointer<Ui::DirectoryStatsMainWindow> ui;
     CustomFileModel *m_treeModel;
@@ -38,8 +42,11 @@ private:
     QSharedPointer<AbstractDirectoryStrategy> m_fileGroupStatStrategy;
 
     QSharedPointer<QtCharts::QChart> m_chart;
-    QSharedPointer<QtCharts::QValueAxis> m_axisY;
     QtCharts::QChartView *m_chartView;
+    ChartUpdater    *m_chartUpdater;
+
+    AbstractStatHolder* m_chartStatHolder;
+    QList<AbstractStatHolder*> m_statHolders;
 };
 
 #endif // DIRECTORYSTATSMAINWINDOW_H

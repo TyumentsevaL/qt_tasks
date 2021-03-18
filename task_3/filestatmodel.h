@@ -19,29 +19,16 @@ class CustomFileModel : public QFileSystemModel, public AbstractStatHolder
 public:
     explicit CustomFileModel(QObject *parent = nullptr);
 
-    void setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy) override;
-
-    void updateStatistics() override;
-
-    /*!
-     * \brief setStatsGrouped -- это костыль, потому что задумка со стратегиями
-     * совершенно загадочна. Мб это сраюотало бы для переписанной модели, которая
-     * отображает типы файлов сразу, но пока так пусть будет
-     * \param grouped         -- смотреть ли по расширениям
-     */
-    void setStatsGrouped(bool grouped);
-
-    // -----------
-
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+protected:
+    void updateStatisticsImpl(const QString& path) override;
+
 private:
-    bool m_statIsGrouped = false;
-    QSharedPointer<AbstractDirectoryStrategy> m_statStrategy = nullptr;
     QHash<QString, double> m_cachedStats;
 };
 

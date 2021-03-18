@@ -2,36 +2,18 @@
 #include "abstractdirectorystrategy.h"
 
 #include <QFileInfo>
+#include <QDebug>
 
 namespace  {
-    static constexpr double SIZE_PRESIZION = 0.0001;
+static constexpr double SIZE_PRESIZION = 0.0001;
 }
 
 CustomFileModel::CustomFileModel(QObject *parent)
     : QFileSystemModel(parent)
 {
-    connect(this, &QFileSystemModel::rootPathChanged, [this](const QString& /*newPath*/) {
-        if (m_statStrategy) {
-            updateStatistics();
-        }
+    connect(this, &QFileSystemModel::rootPathChanged, [this](const QString& newPath) {
+            updateStatistics(newPath);
     });
-}
-
-void CustomFileModel::setStatisticsStrategy(const QSharedPointer<AbstractDirectoryStrategy> &strategy)
-{
-    m_statStrategy = strategy;
-    updateStatistics();
-}
-
-void CustomFileModel::updateStatistics()
-{
-    m_cachedStats = m_statStrategy->getDirectoryInfo(rootPath());
-    emit layoutChanged(); // force update view
-}
-
-void CustomFileModel::setStatsGrouped(bool grouped)
-{
-    m_statIsGrouped = grouped;
 }
 
 int CustomFileModel::columnCount(const QModelIndex &parent) const
@@ -79,4 +61,11 @@ QVariant CustomFileModel::data(const QModelIndex &index, int role) const
     }
 
     return QFileSystemModel::data(index, role);
+}
+
+void CustomFileModel::updateStatisticsImpl(const QString &path)
+{
+    qDebug() << "model" << path;
+    m_cachedStats = m_statStrategy->getDirectoryInfo(path);
+    emit layoutChanged(); // force update view
 }

@@ -7,11 +7,12 @@
 #include <QVBoxLayout>
 #include <QtCharts/QChartView>
 #include <QtCharts/QChart>
-#include <QtCharts/QValueAxis>
 
 #include "filestatmodel.h"
 #include "listfilestrategy.h"
 #include "groupfilestrategy.h"
+#include "chartupdater.h"
+#include "abstractstatholder.h"
 
 DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     : QWidget(parent)
@@ -21,8 +22,9 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     , m_fileStatStrategy(QSharedPointer<ListFileStrategy>::create())
     , m_fileGroupStatStrategy(QSharedPointer<GroupFileStrategy>::create())
     , m_chart(new QtCharts::QChart)
-    , m_axisY(new QtCharts::QValueAxis)
     , m_chartView(new QtCharts::QChartView(m_chart.data(), this))
+    , m_chartUpdater(new ChartUpdater(m_chart, this))
+    , m_chartStatHolder(m_chartUpdater)
 {
     ui->setupUi(this);
 
@@ -50,25 +52,18 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     });
 
     // -------------
-    auto strategyToggler =  [this]{
-        bool goodStats = ui->listFilesRadioButton->isChecked();
-        if (goodStats) {
-            m_treeModel->setStatisticsStrategy(m_fileStatStrategy);
-            m_tableModel->setStatisticsStrategy(m_fileStatStrategy);
-        } else {
-            m_treeModel->setStatisticsStrategy(m_fileGroupStatStrategy);
-            m_tableModel->setStatisticsStrategy(m_fileGroupStatStrategy);
-        }
 
-        m_treeModel->updateStatistics();
-        m_tableModel->updateStatistics();
-        m_treeModel->setStatsGrouped(!goodStats);
-        m_tableModel->setStatsGrouped(!goodStats);
-    };
+    /* Строго говоря, таблица обновляться будет и так, все эти абстракции
+     * нужны только для диаграмм, да и тут можно было бы обойтись просто
+     * вызовом перерисовки. Но раз надо продемонстрировать -- вот пример единообразного
+     * обновления и таблицы, и диаграммы, единый интерфейс адаптера это позволяет
+    */
+    m_statHolders.push_back(m_tableModel);
+    m_statHolders.push_back(m_chartStatHolder);
 
-    connect(ui->listFilesRadioButton, &QRadioButton::toggled, this, strategyToggler);
-    connect(ui->groupFilesRadioButton, &QRadioButton::toggled, this, strategyToggler);
-    strategyToggler();
+    connect(ui->listFilesRadioButton, &QRadioButton::toggled, this, &DirectoryStatsMainWindow::updateStatsViews);
+    connect(ui->groupFilesRadioButton, &QRadioButton::toggled, this, &DirectoryStatsMainWindow::updateStatsViews);
+    updateStatsViews();
 
     // -------------
     chooseTreeFolder(QDir::currentPath());
@@ -82,12 +77,17 @@ DirectoryStatsMainWindow::DirectoryStatsMainWindow(QWidget *parent)
     layout->addWidget(m_chartView);
 
     m_chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
-    m_chart->addAxis(m_axisY.data(), Qt::AlignLeft);
     m_chart->legend()->setVisible(true);
     m_chart->legend()->setAlignment(Qt::AlignBottom);
 
     connect(ui->statsComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int index) {
         ui->statsViewStackedWidget->setCurrentIndex(index > 0 ? 1 : 0);
+        if (index == 1) {
+            m_chartUpdater->setDisplayMode(ChartUpdater::PIE_MODE);
+        }
+        if (index == 2) {
+            m_chartUpdater->setDisplayMode(ChartUpdater::BAR_MODE);
+        }
     });
 
 }
@@ -116,5 +116,21 @@ void DirectoryStatsMainWindow::handleTreeSelection(const QModelIndex &index)
     ui->filesTableView->setVisible(isDir);
     if (isDir) {
         ui->filesTableView->setRootIndex(m_tableModel->setRootPath(currPath));
+        updateStatsViews();
+    }
+}
+
+void DirectoryStatsMainWindow::updateStatsViews()
+{
+    bool goodStats = ui->listFilesRadioButton->isChecked();
+    const QString path = m_tableModel->rootPath();
+
+    // отдельно!!!
+    m_treeModel->setStatisticsStrategy(goodStats ? m_fileStatStrategy : m_fileGroupStatStrategy);
+
+    for (AbstractStatHolder* statHolder : m_statHolders) {
+        statHolder->setStatisticsStrategy(goodStats ? m_fileStatStrategy : m_fileGroupStatStrategy);
+        statHolder->setStatsGrouped(!goodStats);
+        statHolder->updateStatistics(path);
     }
 }

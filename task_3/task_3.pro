@@ -2,6 +2,7 @@ DESTDIR = $$PWD/../build
 
 SOURCES += \
         abstractdirectorystrategy.cpp \
+        abstractstatholder.cpp \
         groupfilestrategy.cpp \
         listfilestrategy.cpp \
         main.cpp
